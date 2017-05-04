@@ -1,7 +1,6 @@
 library(shiny)
 library(tidyverse)
 
-survey = read.csv("~/Desktop/36-315/Interactive Graphic Project/responses.csv")
 # https://www.kaggle.com/START-UMD/gtd
 terr = read.csv("~/Desktop/36-315/Interactive Graphic Project/terr.csv")
 group13_315_theme <-  theme_bw() +  
@@ -27,7 +26,7 @@ function(input, output) {
   output$second_plot <- renderPlot({
     p <- ggplot(data = terr, aes(x = iyear)) + 
       geom_histogram(aes(y=..density..), bins = as.numeric(input$n_breaks),
-                     color = "black") +
+                     color = "black", fill="pink") +
       labs(title = "Age of Young People", x = "Age", y = "Density")+
       group13_315_theme
     
