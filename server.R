@@ -1,7 +1,7 @@
 library(shiny)
 library(tidyverse)
 
-survey = read.csv("~/Desktop/36-315/Interactive Graphic Project/responses.csv")
+# survey = read.csv("~/Desktop/36-315/Interactive Graphic Project/responses.csv")
 # https://www.kaggle.com/START-UMD/gtd
 terr = read.csv("~/Desktop/36-315/Interactive Graphic Project/terr.csv")
 group13_315_theme <-  theme_bw() +  
