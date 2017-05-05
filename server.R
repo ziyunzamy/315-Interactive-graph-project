@@ -1,9 +1,11 @@
 library(shiny)
 library(tidyverse)
-
+library(d3wordcloud)
+library(dplyr)
 # survey = read.csv("~/Desktop/36-315/Interactive Graphic Project/responses.csv")
 # https://www.kaggle.com/START-UMD/gtd
-terr = read.csv("~/Desktop/36-315/Interactive Graphic Project/terr.csv")
+terr = read.csv("terr.csv")
+word_freq = read.csv("foo.csv")
 group13_315_theme <-  theme_bw() +  
   theme(
     plot.title = element_text(size = 16, color = "navy",face="bold"),
@@ -16,13 +18,6 @@ group13_315_theme <-  theme_bw() +
   )
 
 function(input, output) {
-  output$first_plot <- renderPlot({
-    p <- ggplot(data = survey, aes(x = Happiness.in.life)) + 
-      geom_bar(aes(fill = Gender)) +
-      labs(title = "Happiness in Life", x = "Scale") +
-      group13_315_theme
-    print(p)
-  })
   
   output$second_plot <- renderPlot({
     p <- ggplot(data = terr, aes(x = iyear)) + 
@@ -47,4 +42,11 @@ function(input, output) {
     }
     print(p)
   })
+  ### interactive word cloud ###
+  output$wordCloud <- renderD3wordcloud({
+    sample_n <- sample(1:500, input$n_words)
+    word_freq_sample <- word_freq[sample_n,]
+    d3wordcloud(word_freq_sample$clean_NA_v1,word_freq_sample$freqs)
+  })
+  ### end of interactive word cloud ###
 }

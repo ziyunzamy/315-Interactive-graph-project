@@ -6,7 +6,8 @@ shinyUI(dashboardPage(
   dashboardSidebar(
     sidebarMenu(
       menuItem("PartA", tabName = "PartA", icon = icon("th")),
-      menuItem("PartB", tabName = "PartB", icon = icon("th"))
+      menuItem("PartB", tabName = "PartB", icon = icon("th")),
+      menuItem("PartC", tabName = "PartC", icon = icon("th"))
     )
   ),
   dashboardBody(
@@ -40,29 +41,24 @@ shinyUI(dashboardPage(
               )),
       tabItem(tabName = "PartB", 
               tabsetPanel(
-                tabPanel("Plot1", 
-                         fluidRow(
-                           box(plotOutput(outputId = "first_plot", height = "300px")),
-                           box(
-                             title = "Controls",
-                             checkboxInput(inputId = "smooth.line",
-                                           label = strong("Show Fitted Line"),
-                                           value = FALSE),
-                             sliderInput(inputId = "point.size",
-                                         label = "point size:",
-                                         min = 1, max = 10, value = 5, step = 1)
-                           )
-                         )),
-                tabPanel("Plot2", fluidRow(
-                  box(plotOutput(outputId = "countour", height = "300px")),
-                  box(
-                    title = "Controls",
-                    checkboxInput(inputId = "points.visible",
-                                  label = strong("Show Points"),
-                                  value = FALSE))
-                ))
+                tabPanel("Plot1"),
+                tabPanel("Plot2")
+              )
+      ),
+      ### interactive word cloud ###
+      tabItem(tabName = "PartC", 
+              fluidRow(
+                box(d3wordcloudOutput("wordCloud"), width = 12,
+                    title = "Word Cloud for Attack Summary",
+                    solidHeader = TRUE, status = "primary")
+              ),
+              fluidRow(
+                box(width = 12,
+                    sliderInput("n_words", label = "Number of words:", 
+                                min = 10, max = 500, step = 10, value = 150))
               )
       )
+      ### end of interactive word cloud ###
     )
   )
   
