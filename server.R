@@ -1,11 +1,14 @@
 library(shiny)
 library(tidyverse)
-library(d3wordcloud)
+require(devtools)
+install_github("lchiffon/wordcloud2")
+library(wordcloud2)
 library(dplyr)
 # survey = read.csv("~/Desktop/36-315/Interactive Graphic Project/responses.csv")
 # https://www.kaggle.com/START-UMD/gtd
 terr = read.csv("terr.csv")
 word_freq = read.csv("foo.csv")
+word_freq_sample <- data.frame(name = word_freq$clean_NA_v1, value=word_freq$freqs)
 group13_315_theme <-  theme_bw() +  
   theme(
     plot.title = element_text(size = 16, color = "navy",face="bold"),
@@ -43,10 +46,9 @@ function(input, output) {
     print(p)
   })
   ### interactive word cloud ###
-  output$wordCloud <- renderD3wordcloud({
-    sample_n <- sample(1:500, input$n_words)
-    word_freq_sample <- word_freq[sample_n,]
-    d3wordcloud(word_freq_sample$clean_NA_v1,word_freq_sample$freqs)
-  })
+
+  output$wordCloud1 <- renderWordcloud2(
+    wordcloud2(word_freq_sample, size = input$nR,shape = 'star')
+  )
   ### end of interactive word cloud ###
 }

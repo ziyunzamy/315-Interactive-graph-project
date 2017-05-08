@@ -1,4 +1,3 @@
-library(d3wordcloud)
 library("tm")
 library("SnowballC")
 
@@ -26,8 +25,7 @@ docs <- tm_map(docs, removeWords, stopwords("english"))
 docs <- tm_map(docs, removePunctuation)
 # Eliminate extra white spaces
 docs <- tm_map(docs, stripWhitespace)
-# Text stemming
-# docs <- tm_map(docs, stemDocument)
+
 clean <- data.frame(text = sapply(docs, as.character), stringsAsFactors = FALSE)
 clean_NA <- na.omit(clean)
 clean_NA_v1 <- clean_NA[which(clean_NA!="" & clean_NA!=" "),]
@@ -35,13 +33,9 @@ length(clean_NA_v1)
 freqs <- sample(seq(length(clean_NA_v1)))
 result <- cbind(clean_NA_v1,freqs)
 result <- result[order(freqs,decreasing = TRUE),]
-
+length(result)
 write.csv(result[1:500, ], file = "foo.csv")
 
-summary(freqs)
 
 
 
-word_freq = read.csv("foo.csv")
-d3wordcloud(word_freq$clean_NA_v1,word_freq$freqs)
-sample_n(word_freq,10)

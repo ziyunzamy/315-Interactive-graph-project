@@ -1,6 +1,6 @@
 library(shiny)
 library(shinydashboard)
-
+library(wordcloud2)
 shinyUI(dashboardPage(
   dashboardHeader(title = "Basic dashboard"),
   dashboardSidebar(
@@ -48,14 +48,13 @@ shinyUI(dashboardPage(
       ### interactive word cloud ###
       tabItem(tabName = "PartC", 
               fluidRow(
-                box(d3wordcloudOutput("wordCloud"), width = 12,
-                    title = "Word Cloud for Attack Summary",
-                    solidHeader = TRUE, status = "primary")
+                box(title = "Word Cloud of Attacks' Summary",
+                    wordcloud2Output("wordCloud1", width = "100%", height = 500),
+                    width = "100%")
               ),
               fluidRow(
-                box(width = 12,
-                    sliderInput("n_words", label = "Number of words:", 
-                                min = 10, max = 500, step = 10, value = 150))
+                box(sliderInput("nR", "Font Size", 
+                                min = 0.1, max = 1, value = 0.3, step = 0.1))
               )
       )
       ### end of interactive word cloud ###
