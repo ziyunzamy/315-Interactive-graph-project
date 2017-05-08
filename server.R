@@ -38,8 +38,12 @@ function(input, output) {
     p1 <- ggplot(data = terr.clean, aes(x = iyear)) + 
       geom_histogram(aes(y=..density..), bins = as.numeric(input$n_breaks),
                      color = "black", fill="pink") +
+<<<<<<< HEAD
       labs(title = "Distribution of Terrorist Attacks",
            x = "Year of Attacks", y = "Density")+
+=======
+      labs(title = "Age of Young People", x = "Age", y = "Density")+
+>>>>>>> 71b821303d8bce2160fc6bfa5a3e2f7c6e9ac1d1
       group13_315_theme
     
     if (input$show_mean) {
