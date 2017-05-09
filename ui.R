@@ -7,9 +7,9 @@ shinyUI(dashboardPage(
   dashboardHeader(title = "Basic dashboard"),
   dashboardSidebar(
     sidebarMenu(
-      menuItem("PartA", tabName = "PartA", icon = icon("th")),
-      menuItem("PartB", tabName = "PartB", icon = icon("th")),
-      menuItem("PartC", tabName = "PartC", icon = icon("th")),
+      menuItem("What happened over time?", tabName = "PartA", icon = icon("th")),
+      menuItem("What are types of attacks?", tabName = "PartB", icon = icon("th")),
+      menuItem("Deaths vs Wounds", tabName = "PartC", icon = icon("th")),
       menuItem("PartD", tabName = "PartD", icon = icon("th")),
       menuItem("World Map 1", tabName = "map1", icon = icon("th")),
       menuItem("World Map 2", tabName = "map2", icon = icon("th"))
@@ -19,10 +19,10 @@ shinyUI(dashboardPage(
     tabItems(
       tabItem(tabName = "PartA",
               tabsetPanel(
-                tabPanel("Plot1",
+                tabPanel("Histogram of Total Attacks",
                 
                 fluidRow(
-                box(plotOutput(outputId = "first_plot", height = "250")),
+                box(plotOutput(outputId = "first_plot", height = 450),width="100%"),
                 
                 box(
                   title = "Controls",
@@ -47,10 +47,10 @@ shinyUI(dashboardPage(
                                                min = 0.2, max = 2, value = 1, step = 0.2))
                 )
               )),
-                tabPanel("Plot2",
+                tabPanel("Histogram of Attacks by Success and Suicide",
                          
                          fluidRow(
-                           box(plotOutput(outputId = "third_plot", height = "250")),
+                           box(plotOutput(outputId = "third_plot", height = 450),width="100%"),
                            
                            box(
                              title = "Controls",
@@ -78,12 +78,12 @@ shinyUI(dashboardPage(
               
               
               )),
-      ### interactive word cloud ###
+      
       tabItem(tabName = "PartC", 
               fluidRow(
-                tabPanel("Plot1", 
+                tabPanel("Deaths vs Wounds", 
                          fluidRow(
-                           box(plotOutput(outputId = "second_plot", height = "300px")),
+                           box(plotOutput(outputId = "second_plot", height = 450),width="100%"),
                            box(
                              title = "Controls",
                              checkboxInput(inputId = "smoothLine",
@@ -103,20 +103,20 @@ shinyUI(dashboardPage(
       
       tabItem(tabName = "PartB", 
               tabsetPanel(
-                tabPanel("Plot1", 
+                tabPanel("Attacks by Attack Type", 
                          fluidRow(
                            box(plotOutput(outputId = "fourth_plot",
-                                          height = "300px")),
+                                          height = 520),width = "100%"),
                            box(
                              title = "Controls",
                              checkboxInput(inputId = "show_num_4",
                                            label = strong("Show Number of Attacks"),
                                            value = FALSE)
                          ))),
-                tabPanel("Plot2", 
+                tabPanel("Attacks by Target Type", 
                          fluidRow(
                            box(plotOutput(outputId = "fifth_plot",
-                                          height = "300px")),
+                                          height = 520),width = "100%"),
                            box(
                              title = "Controls",
                              checkboxInput(inputId = "show_num_5",

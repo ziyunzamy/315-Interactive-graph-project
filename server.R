@@ -15,10 +15,17 @@ library(countrycode)
 Sys.setlocale('LC_ALL','C') 
 
 terr.clean = read.csv("~/Desktop/36-315/315-Interactive-graph-project/terr_sample.csv")
+terr.clean = terr.clean[which(terr.clean$nkill>=1 & terr.clean$nwound>=1),]
 terr.clean$extended = as.factor(terr.clean$extended)
 terr.clean $extended <- fct_recode(terr.clean $extended,
                             "Incident Last More than 24 hr" = "1", 
                             "Incident Last Less than 24 hr" = "0")
+terr.clean$doubtterr = replace(terr.clean$doubtterr, which(terr.clean$doubtterr == 1), "YES")
+terr.clean$doubtterr = replace(terr.clean$doubtterr, which(terr.clean$doubtterr == 0), "NO")
+terr.clean$doubtterr = replace(terr.clean$doubtterr, which(terr.clean$doubtterr == -9), NA)
+terr.clean$success = ifelse(terr.clean$success==0,"Fail","Success")
+terr.clean$suicide = ifelse(terr.clean$suicide==0,"Not Suicide","Suicide")
+
 
 terr.clean $country_code <- countrycode(terr.clean $country_txt, 'country.name', 'iso3c')
 
@@ -44,7 +51,7 @@ function(input, output) {
     p1 <- ggplot(data = terr.clean, aes(x = iyear)) + 
       geom_histogram(aes(y=..density..), bins = as.numeric(input$n_breaks),
                      color = "black", fill="pink") +
-      labs(title = "Age of Young People", x = "Age", y = "Density")+
+      labs(title = "Distribution of Terrorist Attacks", x = "Year of Attacks", y = "Density")+
       group13_315_theme
     
     if (input$show_mean) {
@@ -65,7 +72,7 @@ function(input, output) {
   })
   
   output$second_plot <- renderPlot({
-    p2 <- ggplot(data = terr.clean, aes(x = nkill, y = nwound)) + 
+    p2 <- ggplot(data = terr.clean, aes(x = log(nkill), y = log(nwound))) + 
       geom_point(aes(color = doubtterr), size = input$pointSize) + 
       labs(x = "Number of Deaths",
            y = "Number of Wounds", color = "Is Terrorism") + 
