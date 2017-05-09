@@ -6,7 +6,7 @@ library(dplyr)
 # https://www.kaggle.com/START-UMD/gtd
 terr = read.csv("terr.csv")
 word_freq = read.csv("foo.csv")
-word_freq_sample <- data.frame(name = word_freq$clean_NA_v1, value=word_freq$freqs)
+word_freq_sample <- data.frame(name = as.character(word_freq$V1), value=word_freq$V2)
 library(forcats)
 library(countrycode)
 
