@@ -4,8 +4,8 @@ library(wordcloud2)
 library(dplyr)
 # survey = read.csv("~/Desktop/36-315/Interactive Graphic Project/responses.csv")
 # https://www.kaggle.com/START-UMD/gtd
-terr = read.csv("terr.csv")
-word_freq = read.csv("foo.csv")
+# terr = read.csv("~/Desktop/36-315/315-Interactive-graph-project/terr.csv")
+word_freq = read.csv("~/Desktop/36-315/315-Interactive-graph-project/foo.csv")
 word_freq_sample <- data.frame(name = word_freq$clean_NA_v1, value=word_freq$freqs)
 library(forcats)
 library(countrycode)
@@ -14,7 +14,7 @@ library(countrycode)
 
 Sys.setlocale('LC_ALL','C') 
 
-terr.clean = read.csv("terr_sample.csv")
+terr.clean = read.csv("~/Desktop/36-315/315-Interactive-graph-project/terr_sample.csv")
 terr.clean$extended = as.factor(terr.clean$extended)
 terr.clean $extended <- fct_recode(terr.clean $extended,
                             "Incident Last More than 24 hr" = "1", 
