@@ -4,7 +4,7 @@ terr = as.data.frame(terr[,c("iyear", "imonth", "iday", "extended", "country_txt
                              "longitude", "specificity", "crit1", "crit2", "crit3",
                              "doubtterr", "success", "suicide", "attacktype1_txt",
                              "targtype1_txt", "weaptype1_txt", "nkill", "nwound",
-                             "property", "propvalue")])
+                             "property", "propvalue", "summary")])
 
 
 set.seed(4)
