@@ -4,15 +4,15 @@ library(wordcloud2)
 library(plotly)
 
 shinyUI(dashboardPage(
-  dashboardHeader(title = "Basic dashboard"),
+  dashboardHeader(title = "Global Terrorism"),
   dashboardSidebar(
     sidebarMenu(
       menuItem("What happened over time?", tabName = "PartA", icon = icon("th")),
       menuItem("What are types of attacks?", tabName = "PartB", icon = icon("th")),
       menuItem("Deaths vs Wounds", tabName = "PartC", icon = icon("th")),
-      menuItem("PartD", tabName = "PartD", icon = icon("th")),
-      menuItem("World Map 1", tabName = "map1", icon = icon("th")),
-      menuItem("World Map 2", tabName = "map2", icon = icon("th"))
+      menuItem("Word Cloud", tabName = "PartD", icon = icon("th")),
+      menuItem("World Map", tabName = "map1", icon = icon("th")),
+      menuItem("World Map - Globe", tabName = "map2", icon = icon("th"))
       )
   ),
   dashboardBody(
@@ -125,14 +125,36 @@ shinyUI(dashboardPage(
                            )))
               )
       ),
+      
+      
+      ### World map 
       tabItem(tabName = "map1",
-              fluidRow(plotlyOutput("map_plot1"))
+              fluidRow(plotlyOutput("map_plot1"),
+                       box(
+                         title = "Controls",
+                         selectInput(inputId = "var_type",
+                                     label = "Displayed by",
+                                     choices = c("Incident last more than 24 hr?",
+                                                 "Incident was successful?",
+                                                 "Suicide attack?"))
+                         )
+                       )
       ),
       
-      # Second tab content
+    
       tabItem(tabName = "map2",
-              fluidRow(plotlyOutput("map_plot2"))
+              fluidRow(plotlyOutput("map_plot2"),
+                       box(
+                         title = "Controls",
+                         selectInput(inputId = "var_by",
+                                     label = "Displayed by",
+                                     choices = c("Number of People Killed",
+                                                 "Damaged Property Value"))
+                       ))
       ),
+      
+      
+      ### End: World Map 
       tabItem(tabName = "PartD",
         fluidRow(
           box(title = "Word Cloud of Attacks' Summary",
