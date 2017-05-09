@@ -16,15 +16,26 @@ Sys.setlocale('LC_ALL','C')
 
 terr.clean = read.csv("terr_sample.csv")
 terr.clean$extended = as.factor(terr.clean$extended)
-terr.clean $extended <- fct_recode(terr.clean $extended,
+terr.clean$extended <- fct_recode(terr.clean $extended,
                             "Incident Last More than 24 hr" = "1", 
                             "Incident Last Less than 24 hr" = "0")
 
-terr.clean $country_code <- countrycode(terr.clean $country_txt, 'country.name', 'iso3c')
+terr.clean$country_code <- countrycode(terr.clean $country_txt, 'country.name', 'iso3c')
+terr.clean$success <- as.factor(terr.clean$success)
+terr.clean$success <- fct_recode(terr.clean$success,
+                                  "Incident was successful" = "1", 
+                                  "Incident was not successful" = "0")
+terr.clean$suicide <- as.factor(terr.clean$suicide)
+terr.clean$suicide <- fct_recode(terr.clean$suicide,
+                                 "Incident was a suicide attack" = "1", 
+                                 "Incident was not a suicide attack" = "0")
 
 terr_by_country <- terr.clean  %>% 
   group_by(country_code, country_txt) %>% 
-  summarize(total_kill = sum(nkill, na.rm = TRUE))
+  summarize(total_kill = sum(nkill, na.rm = TRUE),
+            total_prop = sum(propvalue, na.rm = TRUE))
+
+
 group13_315_theme <-  theme_bw() +  
   theme(
     plot.title = element_text(size = 16, color = "navy",face="bold"),
@@ -136,12 +147,15 @@ function(input, output) {
     
     print(p5)
   })
+  
+  
+  
+  ### World Map - Scattered 
   output$map_plot1 <- renderPlotly({
     
-    # light grey boundaries
+    
     l <- list(color = toRGB("grey"), width = 0.5)
     
-    # specify map projection/options
     g <- list(
       scope = "world",
       showland = TRUE,
@@ -156,35 +170,63 @@ function(input, output) {
       projection = list(type = 'Mercator')
     )
     
-    plot_geo(terr.clean ) %>%
-      add_markers(
-        x = ~ longitude,
-        y = ~ latitude, 
-        color = ~ extended, 
-        hoverinfo = "text",
-        text = ~paste(city, ",", country_txt, "<br />", 
-                      iyear, '-', imonth, '-', iday, "<br />"),
-        size = I(3)
-      )  %>% 
-      layout(
-        title = 'Global Terrorism Distribution',
-        geo = g,
-        legend = list(orientation = 'h')
-      )
+    if (input$var_type == 'Incident last more than 24 hr?') {
+      p <- plot_geo(terr.clean) %>%
+        add_markers(x = ~ longitude,
+                    y = ~ latitude, 
+                    color = ~ extended, 
+                    hoverinfo = "text",
+                    text = ~paste(city, ",", country_txt, "<br />", 
+                                  iyear, '-', imonth, '-', iday, "<br />"),
+                    size = I(3)
+                    )  %>% 
+        layout(title = 'Global Terrorism Distribution',
+               geo = g,
+               legend = list(orientation = 'h')
+        )
+    }
+    if (input$var_type == 'Suicide attack?') {
+      p <- plot_geo(terr.clean) %>%
+        add_markers(x = ~ longitude,
+                    y = ~ latitude, 
+                    color = ~ suicide, 
+                    hoverinfo = "text",
+                    text = ~paste(city, ",", country_txt, "<br />", 
+                                  iyear, '-', imonth, '-', iday, "<br />"),
+                    size = I(3)
+        )  %>% 
+        layout(title = 'Global Terrorism Distribution',
+               geo = g,
+               legend = list(orientation = 'h')
+        )
+    }
+    
+    if (input$var_type == 'Incident was successful?') {
+      p <- plot_geo(terr.clean) %>%
+        add_markers(x = ~ longitude,
+                    y = ~ latitude, 
+                    color = ~ success, 
+                    hoverinfo = "text",
+                    text = ~paste(city, ",", country_txt, "<br />", 
+                                  iyear, '-', imonth, '-', iday, "<br />"),
+                    size = I(3)
+        )  %>% 
+        layout(title = 'Global Terrorism Distribution',
+               geo = g,
+               legend = list(orientation = 'h')
+        )
+    }
+    print(p)
   })
+  
+  ### End: World Map - Scattered 
+  
+  ### World Map - Globe
   
   output$map_plot2 <- renderPlotly({
     
-    # light grey boundaries
     l <- list(color = toRGB("grey"), width = 0.5)
-    
-    # specify map projection/options
-    g <- list(
-      showcoastlines = FALSE,
-      showframe = FALSE,
-      projection = list(type = 'Mercator')
-    )
-    
+  
     geo <- list(
       showland = TRUE,
       showlakes = TRUE,
@@ -214,21 +256,39 @@ function(input, output) {
       )
     )
     
-    plot_geo(terr_by_country) %>%
-      add_trace(
-        z = ~ total_kill,  
-        color = ~ total_kill, 
-        colors = 'Blues',
-        text = ~paste(country_txt),
-        locations = ~ country_code,
-        marker = list(line = l)
-      ) %>%
-      colorbar(title = "Number of People Killed") %>% 
-      layout(
-        title = 'Global Terrorism Distribution',
-        geo = geo
-      )
+    if (input$var_by == "Number of People Killed") {
+      p <- plot_geo(terr_by_country) %>%
+        add_trace(z = ~ total_kill,  
+                  color = ~ total_kill, 
+                  colors = 'Blues',
+                  text = ~ paste(country_txt),
+                  locations = ~ country_code,
+                  marker = list(line = l)) %>%
+        colorbar(title = "Number of People Killed") %>% 
+        layout(title = 'Global Terrorism Distribution',
+               geo = geo)
+      
+    }
+    
+    if (input$var_by == "Damaged Property Value") {
+      p <- plot_geo(terr_by_country) %>%
+        add_trace(z = ~ total_prop,  
+                  color = ~ total_prop, 
+                  colors = 'Greens',
+                  text = ~ paste(country_txt),
+                  locations = ~ country_code,
+                  marker = list(line = l)) %>%
+        colorbar(title = "Total Damage in U.S dollar") %>% 
+        layout(title = 'Global Terrorism Distribution',
+               geo = geo)
+      
+    }
+    
+    print(p)
   })
+  
+  ### End: World Map - Globe
+  
   ### interactive word cloud ###
 
   output$wordCloud1 <- renderWordcloud2(
